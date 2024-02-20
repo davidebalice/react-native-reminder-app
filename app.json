@@ -10,7 +10,10 @@
       "eas": {
         "projectId": "a82ef6dc-92c2-4076-b203-e202304d5577"
       }
-    }
+    },
+    "plugins": [
+      "expo-localization"
+    ]
   },
   "name": "react-native-reminder-app"
 }

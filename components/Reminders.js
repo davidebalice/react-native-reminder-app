@@ -5,6 +5,8 @@ import {
   StyleSheet,
   FlatList,
   Image,
+  Modal,
+  Button,
   ScrollView,
   Alert,
   Animated,
@@ -17,14 +19,76 @@ import { AuthContext } from "../context/authContext";
 import axios from "axios";
 import API_URLS from "../config";
 import { format } from "date-fns";
+import { configureDates, DatePickerModal } from "react-native-paper-dates";
 
 const Reminders = () => {
   const panelHeight = useRef(new Animated.Value(0)).current;
   const [reminder, setReminder] = useState("");
   const [reminders, setReminders] = useState([]);
-
   const { token, setAuthToken } = useContext(AuthContext);
+  const [modalVisible, setModalVisible] = useState(false);
 
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const onDateChange = (dateObject) => {
+    const selectedDateValue = dateObject?.date;
+
+    if (
+      selectedDateValue instanceof Date &&
+      !isNaN(selectedDateValue.getTime())
+    ) {
+      const formattedDate = format(selectedDateValue, "dd/MM/yyyy");
+      setSelectedDate(formattedDate);
+    }
+    setModalVisible(false);
+  };
+
+  /*
+  configureDates({
+    locales: {
+      en: {
+        monthNames: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ],
+        monthNamesShort: [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
+        dayNames: [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ],
+        dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      },
+    },
+  });
+*/
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -50,7 +114,7 @@ const Reminders = () => {
 
   const openPanel = () => {
     Animated.timing(panelHeight, {
-      toValue: 260,
+      toValue: 400,
       duration: 300,
       useNativeDriver: false,
     }).start();
@@ -110,26 +174,50 @@ const Reminders = () => {
           />
         </TouchableOpacity>
       </View>
-      <ScrollView style={styles.container}>
-        <FlatList
-          data={reminders}
-          renderItem={renderItem}
-          keyExtractor={(item) => item._id}
+      <Animated.View style={[styles.panel, { height: panelHeight }]}>
+        <Text>Add reminder</Text>
+        <TextInput
+          style={styles.input}
+          value={reminder}
+          onChangeText={setReminder}
+          placeholder="Add item"
         />
-        <Animated.View style={[styles.panel, { height: panelHeight }]}>
-          <Text>Add reminder</Text>
+
+        <View>
+          <Button title="Apri Modal" onPress={() => setModalVisible(true)} />
+          {modalVisible && (
+            <DatePickerModal
+              visible={modalVisible}
+              locale="en"
+              mode="single"
+              onDismiss={() => setModalVisible(false)}
+              onChange={onDateChange}
+            />
+          )}
+          <Text>{selectedDate}</Text>
+
           <TextInput
             style={styles.input}
-            value={reminder}
-            onChangeText={setReminder}
-            placeholder="Add item"
+            value={selectedDate ? selectedDate.toString() : ""}
+            placeholder="Add deadline"
           />
-          <TouchableOpacity style={styles.addButton} onPress={addReminder}>
-            <Text style={styles.buttonText}>Add</Text>
-          </TouchableOpacity>
-        </Animated.View>
-        <Spacer height={100} />
-      </ScrollView>
+        </View>
+
+        <TouchableOpacity style={styles.addButton} onPress={addReminder}>
+          <Text style={styles.buttonText}>Add</Text>
+        </TouchableOpacity>
+        <Spacer height={10} />
+      </Animated.View>
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          <FlatList
+            data={reminders}
+            renderItem={renderItem}
+            keyExtractor={(item) => item._id}
+          />
+          <Spacer height={100} />
+        </ScrollView>
+      </View>
       <Spacer height={10} />
     </>
   );
@@ -138,8 +226,9 @@ const Reminders = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 0,
-    height: "50%",
+  },
+  scrollView: {
+    flex: 1,
   },
   storyName: {
     fontSize: 12,
@@ -200,7 +289,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 2,
-    zIndex: 10,
+    zIndex: 200,
   },
   plusIcon: {
     color: "#fff",
@@ -208,15 +297,16 @@ const styles = StyleSheet.create({
   },
   panel: {
     position: "absolute",
-    bottom: 0,
+    bottom: 6,
     left: 0,
     right: 0,
     backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
-    borderWidth: 1,
-    borderColor: "#dddddd",
+    borderWidth: 2,
+    borderColor: "green",
+    zIndex: 100,
   },
   input: {
     height: 40,
