@@ -19,76 +19,16 @@ import { AuthContext } from "../context/authContext";
 import axios from "axios";
 import API_URLS from "../config";
 import { format } from "date-fns";
-import { configureDates, DatePickerModal } from "react-native-paper-dates";
+import ReminderFormAdd from "./RemindersFormAdd";
 
 const Reminders = () => {
-  const panelHeight = useRef(new Animated.Value(0)).current;
-  const [reminder, setReminder] = useState("");
+  const [reminder, setReminder] = useState({
+    title: "",
+    description: "",
+  });
   const [reminders, setReminders] = useState([]);
   const { token, setAuthToken } = useContext(AuthContext);
-  const [modalVisible, setModalVisible] = useState(false);
 
-  const [selectedDate, setSelectedDate] = useState("");
-
-  const onDateChange = (dateObject) => {
-    const selectedDateValue = dateObject?.date;
-
-    if (
-      selectedDateValue instanceof Date &&
-      !isNaN(selectedDateValue.getTime())
-    ) {
-      const formattedDate = format(selectedDateValue, "dd/MM/yyyy");
-      setSelectedDate(formattedDate);
-    }
-    setModalVisible(false);
-  };
-
-  /*
-  configureDates({
-    locales: {
-      en: {
-        monthNames: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ],
-        monthNamesShort: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ],
-        dayNames: [
-          "Sunday",
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-        ],
-        dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-      },
-    },
-  });
-*/
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -112,29 +52,7 @@ const Reminders = () => {
     fetchData();
   }, []);
 
-  const openPanel = () => {
-    Animated.timing(panelHeight, {
-      toValue: 400,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const closePanel = () => {
-    Animated.timing(panelHeight, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const addReminder = () => {
-    setReminders([...reminders]);
-    setReminder("");
-    closePanel();
-  };
-
-  const renderItem = ({ item }) => {
+  const reminderCard = ({ item }) => {
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader}>
@@ -155,64 +73,12 @@ const Reminders = () => {
 
   return (
     <>
-      <View style={styles.floatingButtonContainer}>
-        <TouchableOpacity
-          style={styles.floatingButton}
-          onPress={() => {
-            if (panelHeight._value === 0) {
-              openPanel();
-            } else {
-              closePanel();
-            }
-          }}
-        >
-          <Icon
-            name="plus-circle"
-            size={20}
-            color="#888"
-            style={styles.plusIcon}
-          />
-        </TouchableOpacity>
-      </View>
-      <Animated.View style={[styles.panel, { height: panelHeight }]}>
-        <Text>Add reminder</Text>
-        <TextInput
-          style={styles.input}
-          value={reminder}
-          onChangeText={setReminder}
-          placeholder="Add item"
-        />
-
-        <View>
-          <Button title="Apri Modal" onPress={() => setModalVisible(true)} />
-          {modalVisible && (
-            <DatePickerModal
-              visible={modalVisible}
-              locale="en"
-              mode="single"
-              onDismiss={() => setModalVisible(false)}
-              onChange={onDateChange}
-            />
-          )}
-          <Text>{selectedDate}</Text>
-
-          <TextInput
-            style={styles.input}
-            value={selectedDate ? selectedDate.toString() : ""}
-            placeholder="Add deadline"
-          />
-        </View>
-
-        <TouchableOpacity style={styles.addButton} onPress={addReminder}>
-          <Text style={styles.buttonText}>Add</Text>
-        </TouchableOpacity>
-        <Spacer height={10} />
-      </Animated.View>
+      <ReminderFormAdd reminder={reminder} setReminder={setReminder} />
       <View style={styles.container}>
         <ScrollView style={styles.scrollView}>
           <FlatList
             data={reminders}
-            renderItem={renderItem}
+            renderItem={reminderCard}
             keyExtractor={(item) => item._id}
           />
           <Spacer height={100} />
