@@ -5,10 +5,8 @@ import { useNavigation, Button, Text, View } from "@react-navigation/native";
 import Appbar from "../components/Appbar";
 import HomeScreen from "../screens/HomeScreen";
 import ReminderScreen from "../screens/ReminderScreen";
-import ProtectedScreen from "../screens/ProtectedScreen";
-import FormScreen from "../screens/FormScreen";
-import ThemeScreen from "../screens/ThemeScreen";
-import LoginScreen from "../screens/LoginScreen";
+import ReminderEditScreen from "../screens/ReminderEditScreen";
+
 import SideMenu from "../components/SideMenu";
 
 const Stack = createStackNavigator();
@@ -56,23 +54,8 @@ const Navigator = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="ProtectedPage"
-          component={ProtectedScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Form"
-          component={FormScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Theme"
-          component={ThemeScreen}
+          name="Edit"
+          component={ReminderEditScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

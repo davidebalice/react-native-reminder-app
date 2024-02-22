@@ -19,7 +19,8 @@ import { AuthContext } from "../context/authContext";
 import axios from "axios";
 import API_URLS from "../config";
 import { format } from "date-fns";
-import ReminderFormAdd from "./RemindersFormAdd";
+import ReminderAdd from "./RemindersAdd";
+import ReminderCard from "./ReminderCard";
 
 const Reminders = () => {
   const [reminder, setReminder] = useState({
@@ -27,7 +28,12 @@ const Reminders = () => {
     description: "",
   });
   const [reminders, setReminders] = useState([]);
+  const [reload, setReload] = useState(0);
   const { token, setAuthToken } = useContext(AuthContext);
+
+  const renderItem = ({ item }) => {
+    return <ReminderCard item={item} reload={reload} setReload={setReload} />;
+  };
 
   const fetchData = async () => {
     try {
@@ -50,35 +56,21 @@ const Reminders = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
-
-  const reminderCard = ({ item }) => {
-    return (
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Text style={styles.title}>
-            <Text style={styles.deadline}>
-              {format(new Date(item._doc.deadline), "dd/MM/yyyy")}
-            </Text>
-            <Text> - </Text>
-            {item._doc.title}
-          </Text>
-        </View>
-        <View style={styles.cardBody}>
-          <Text style={styles.cardText}>{item._doc.description}</Text>
-        </View>
-      </View>
-    );
-  };
+  }, [reload]);
 
   return (
     <>
-      <ReminderFormAdd reminder={reminder} setReminder={setReminder} />
+      <ReminderAdd
+        reminder={reminder}
+        setReminder={setReminder}
+        reload={reload}
+        setReload={setReload}
+      />
       <View style={styles.container}>
         <ScrollView style={styles.scrollView}>
           <FlatList
             data={reminders}
-            renderItem={reminderCard}
+            renderItem={renderItem}
             keyExtractor={(item) => item._id}
           />
           <Spacer height={100} />
@@ -100,25 +92,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
   },
-  cardHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 1,
-  },
-  card: {
-    padding: 20,
-    borderRadius: 10,
-    margin: 10,
-    marginBottom: 4,
-    backgroundColor: "white",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  cardBody: {
-    flex: 1,
+  iconContainer: {
+    justifyContent: "space-between",
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
   },
   title: {
     fontWeight: "bold",
@@ -126,16 +104,6 @@ const styles = StyleSheet.create({
   },
   deadline: {
     color: "#ff0000",
-  },
-  cardImage: {
-    width: "100%",
-    height: 150,
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  cardText: {
-    marginTop: 10,
-    fontSize: 12,
   },
   floatingButtonContainer: {
     position: "absolute",
@@ -160,6 +128,14 @@ const styles = StyleSheet.create({
   plusIcon: {
     color: "#fff",
     fontSize: 28,
+  },
+  editIcon: {
+    color: "#336699",
+    fontSize: 22,
+  },
+  delIcon: {
+    color: "#ff0000",
+    fontSize: 23,
   },
   panel: {
     position: "absolute",

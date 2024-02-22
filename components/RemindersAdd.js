@@ -16,11 +16,10 @@ import { format } from "date-fns";
 import { DatePickerModal } from "react-native-paper-dates";
 import RNPickerSelect from "react-native-picker-select";
 
-const RemindersFormAdd = ({ reminder, setReminder }) => {
+const RemindersAdd = ({ reminder, setReminder, reload, setReload }) => {
   const [categoriesData, setCategoriesData] = useState(null);
   const panelHeight = useRef(new Animated.Value(0)).current;
   const [display, setDisplay] = useState("none");
-  const [reminders, setReminders] = useState([]);
   const { token, setAuthToken } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
@@ -28,6 +27,7 @@ const RemindersFormAdd = ({ reminder, setReminder }) => {
     title: "",
     description: "",
     category_id: "",
+    deadline: "",
   });
 
   const handleInput = (name, value) => {
@@ -65,6 +65,8 @@ const RemindersFormAdd = ({ reminder, setReminder }) => {
     }
     setModalVisible(false);
     setDisplay("none");
+    const updatedFormData = { ...formData, deadline: selectedDateValue };
+    setFormData(updatedFormData);
   };
 
   const openDatePicker = () => {
@@ -82,20 +84,17 @@ const RemindersFormAdd = ({ reminder, setReminder }) => {
         },
       })
       .then((response) => {
-        console.log("response.data");
-        console.log(response);
-        console.log(response.data);
-
-        /*
-        if (response.data.message === "success") {
-          navigate(`/reminders/`);
-        }
-        */
+        setReload(reload + 1);
+        setFormData({
+          title: "",
+          description: "",
+          category_id: "",
+          deadline: "",
+        });
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-    setReminders([...reminders]);
     setReminder("");
     closePanel();
   };
@@ -342,4 +341,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RemindersFormAdd;
+export default RemindersAdd;

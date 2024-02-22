@@ -23,20 +23,5 @@ export const screens = [
     icon: "login-variant",
     link: "Login",
   },
-  {
-    id: 10,
-    title: "Profile (Protected page)",
-    color: "#4682B4",
-    typeIcon: "2",
-    icon: "lock",
-    link: "ProtectedPage",
-  },
-  {
-    id: 12,
-    title: "Theme settings",
-    color: "#4682B4",
-    typeIcon: "5",
-    icon: "settings-sharp",
-    link: "Theme",
-  },
+
 ];
