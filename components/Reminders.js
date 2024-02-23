@@ -28,8 +28,7 @@ const Reminders = () => {
     description: "",
   });
   const [reminders, setReminders] = useState([]);
-  const [reload, setReload] = useState(0);
-  const { token, setAuthToken } = useContext(AuthContext);
+  const { token, setAuthToken, reload, setReload } = useContext(AuthContext);
 
   const renderItem = ({ item }) => {
     return <ReminderCard item={item} reload={reload} setReload={setReload} />;

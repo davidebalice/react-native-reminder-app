@@ -14,59 +14,17 @@ import ProtectedContents from "../middlewares/ProtectedContents";
 import { AuthContext } from "../context/authContext";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Icon2 from "react-native-vector-icons/MaterialIcons";
+import ReminderEdit from "../components/RemindersEdit";
 import API_URLS from "../config";
 
 const ReminderEditScreen = ({ route }) => {
   const { itemId } = route.params;
-  const [item, setItem] = useState("");
-  const [items, setItems] = useState([]);
-  const panelHeight = useRef(new Animated.Value(0)).current;
-  const { token, setAuthToken } = useContext(AuthContext);
-
-  const axiosConfig = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  const fetchInitialItems = async () => {
-    try {
-      const response = await axios.get(
-        `${API_URLS.reminderApi}/reminder`,
-        axiosConfig
-      );
-
-      console.log(response.data);
-      setItems(response.data);
-    } catch (error) {
-      console.error("Errore durante il recupero degli elementi:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchInitialItems();
-  }, []);
-
-  const addItem = async () => {
-    try {
-      const response = await axios.post(
-        `${API_URLS.reminderApi}/reminder`,
-        axiosConfig,
-        { item }
-      );
-      setItems([...items, response.data]);
-      setItem("");
-      closePanel();
-    } catch (error) {
-      console.error("Errore durante l'aggiunta dell'elemento:", error);
-    }
-  };
 
   return (
     <View style={styles.container}>
       <ProtectedContents>
-        <View style={styles.floatingButtonContainer}>
-          <Text>{itemId}</Text>
+        <View>
+          <ReminderEdit itemId={itemId && itemId} />
         </View>
       </ProtectedContents>
     </View>
@@ -78,6 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#f1f8ff",
+    justifyContent: "flex-start",
   },
   input: {
     height: 40,
@@ -103,26 +62,6 @@ const styles = StyleSheet.create({
   list: {
     marginTop: 10,
     width: "100%",
-  },
-  floatingButtonContainer: {
-    position: "absolute",
-    bottom: 60,
-    right: 20,
-  },
-  floatingButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    color: "#ffffff",
-    backgroundColor: "#0fa327",
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 5,
-    shadowColor: "black",
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 2,
-    zIndex: 10,
   },
   plusIcon: {
     color: "#fff",

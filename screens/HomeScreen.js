@@ -5,7 +5,10 @@ import Reminders from "../components/Reminders";
 import ProtectedContents from "../middlewares/ProtectedContents";
 import { AuthContext } from "../context/authContext";
 
-const HomeScreen = () => {
+const HomeScreen = ({ route }) => {
+  const { reloadReminders } = route.params || {
+    reloadReminders: 0,
+  };
   const { token, setAuthToken } = useContext(AuthContext);
 
   const logout = () => {
@@ -14,7 +17,7 @@ const HomeScreen = () => {
 
   return (
     <ProtectedContents style={styles.container}>
-      <Reminders />
+      <Reminders reloadReminders={reloadReminders} />
     </ProtectedContents>
   );
 };
