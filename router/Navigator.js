@@ -6,7 +6,7 @@ import Appbar from "../components/Appbar";
 import HomeScreen from "../screens/HomeScreen";
 import ReminderScreen from "../screens/ReminderScreen";
 import ReminderEditScreen from "../screens/ReminderEditScreen";
-
+import ThemeScreen from "../screens/ThemeScreen";
 import SideMenu from "../components/SideMenu";
 
 const Stack = createStackNavigator();
@@ -56,6 +56,11 @@ const Navigator = () => {
         <Stack.Screen
           name="Edit"
           component={ReminderEditScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Theme"
+          component={ThemeScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

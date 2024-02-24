@@ -83,12 +83,9 @@ const InfoModal = ({ modalVisible, setModalVisible }) => {
           </View>
           <Image source={logo} style={styles.logo} resizeMode="contain" />
           <Text style={styles.title1}>React Native</Text>
-          <Text style={styles.title2}>Starter App 1.03</Text>
-          <Text style={styles.text}>
-            App with basic components such as appbar, drawer, theming, api
-            products, login, carousel, gallery, geolocation and more, useful for starting
-            a new project.
-          </Text>
+          <Text style={styles.title2}>Reminders App 1.02</Text>
+          <Text style={styles.text}>Manage Reminders</Text>
+          <Text style={styles.text2}>Api connect to Node server</Text>
 
           <TouchableOpacity onPress={openLink}>
             <Text style={styles.link}>www.davidebalice.dev</Text>

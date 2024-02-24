@@ -1,5 +1,4 @@
 import React, { createContext, useState } from "react";
-
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -10,8 +9,15 @@ export const AuthProvider = ({ children }) => {
     setToken(newToken);
   };
 
+  const logout = () => {
+    setAuthToken("");
+    setToken("");
+  };
+
   return (
-    <AuthContext.Provider value={{ token, setAuthToken, reload, setReload }}>
+    <AuthContext.Provider
+      value={{ token, setAuthToken, reload, setReload, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

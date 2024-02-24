@@ -18,7 +18,6 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { AuthContext } from "../context/authContext";
 import axios from "axios";
 import API_URLS from "../config";
-import { format } from "date-fns";
 import ReminderAdd from "./RemindersAdd";
 import ReminderCard from "./ReminderCard";
 

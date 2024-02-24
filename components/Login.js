@@ -29,7 +29,6 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-
     if (!username || !password) {
       Alert.alert("Error", "Insert email and password");
       return;
@@ -50,17 +49,10 @@ const Login = () => {
       },
     };
 
-    const response = await axios.post(
-      `https://personal-reminder-api.davidebalice.dev/api/login`,
-      {
-        email: username,
-        password: password,
-      }
-    );
-
-    console.log(response);
-    console.log(response.status);
-    console.log(response.status);
+    const response = await axios.post(`${API_URLS.reminderApi}/api/login/`, {
+      email: username,
+      password: password,
+    });
 
     if (response.status === 200) {
       const data = response.data;
@@ -79,13 +71,6 @@ const Login = () => {
       const errorData = response.data;
       Alert.alert("Login error", errorData.message || "Login error");
     }
-    /*
-    }
-   
-    catch (error) {
-      console.error("Login error:", error);
-    }
-*/
   };
 
   return (

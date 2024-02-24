@@ -20,7 +20,7 @@ const RemindersAdd = ({ reminder, setReminder, reload, setReload }) => {
   const [categoriesData, setCategoriesData] = useState(null);
   const panelHeight = useRef(new Animated.Value(0)).current;
   const [display, setDisplay] = useState("none");
-  const { token, setAuthToken } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [formData, setFormData] = useState({
@@ -29,6 +29,7 @@ const RemindersAdd = ({ reminder, setReminder, reload, setReload }) => {
     category_id: "",
     deadline: "",
   });
+  const [open, setOpen] = useState(false);
 
   const handleInput = (name, value) => {
     setFormData({
@@ -43,6 +44,7 @@ const RemindersAdd = ({ reminder, setReminder, reload, setReload }) => {
       duration: 300,
       useNativeDriver: false,
     }).start();
+    setOpen(true);
   };
 
   const closePanel = () => {
@@ -51,6 +53,7 @@ const RemindersAdd = ({ reminder, setReminder, reload, setReload }) => {
       duration: 300,
       useNativeDriver: false,
     }).start();
+    setOpen(false);
   };
 
   const onDateChange = (dateObject) => {
@@ -155,12 +158,16 @@ const RemindersAdd = ({ reminder, setReminder, reload, setReload }) => {
             }
           }}
         >
-          <Icon
-            name="plus-circle"
-            size={20}
-            color="#888"
-            style={styles.plusIcon}
-          />
+          {open ? (
+            <Icon name="close" size={20} color="#888" style={styles.plusIcon} />
+          ) : (
+            <Icon
+              name="plus"
+              size={20}
+              color="#888"
+              style={styles.plusIcon}
+            />
+          )}
         </TouchableOpacity>
       </View>
       <Animated.View style={[styles.panel, { height: panelHeight }]}>

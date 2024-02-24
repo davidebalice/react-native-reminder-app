@@ -6,9 +6,11 @@ import Icon2 from "react-native-vector-icons/Ionicons";
 import Icon3 from "react-native-vector-icons/Entypo";
 import Icon6 from "react-native-vector-icons/MaterialCommunityIcons";
 import ThemeContext from "../context/themeContext";
+import { AuthContext } from "../context/authContext";
 
 const BottomBar = () => {
   const navigation = useNavigation();
+  const { logout, token } = useContext(AuthContext);
   const { theme, toggleTheme } = useContext(ThemeContext);
   return (
     <View
@@ -20,39 +22,22 @@ const BottomBar = () => {
           navigation.navigate("Home");
         }}
       >
-        <Icon name="home" size={20} style={{ color: theme.colors.text }} />
-        <Text style={{ ...styles.text, color: theme.colors.text }}>Home</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.tabButton}
-        onPress={() => {
-          navigation.navigate("Products");
-        }}
-      >
-        <Icon3
-          name="shopping-cart"
-          size={20}
-          style={{ color: theme.colors.text }}
-        />
+        <Icon name="calendar" size={20} style={{ color: theme.colors.text }} />
         <Text style={{ ...styles.text, color: theme.colors.text }}>
-          Products
+          Reminders
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.tabButton}
-        onPress={() => {
-          navigation.navigate("Login");
-        }}
-      >
-        <Icon6
-          name="login-variant"
-          size={20}
-          style={{ color: theme.colors.text }}
-        />
-        <Text style={{ ...styles.text, color: theme.colors.text }}>Login</Text>
-      </TouchableOpacity>
+      
+
+      {token && (
+        <TouchableOpacity style={styles.tabButton} onPress={logout}>
+          <Icon6 name="logout" size={20} style={{ color: theme.colors.text }} />
+          <Text style={{ ...styles.text, color: theme.colors.text }}>
+            Logout
+          </Text>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity
         style={styles.tabButton}

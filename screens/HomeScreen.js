@@ -11,10 +11,6 @@ const HomeScreen = ({ route }) => {
   };
   const { token, setAuthToken } = useContext(AuthContext);
 
-  const logout = () => {
-    setAuthToken("");
-  };
-
   return (
     <ProtectedContents style={styles.container}>
       <Reminders reloadReminders={reloadReminders} />
