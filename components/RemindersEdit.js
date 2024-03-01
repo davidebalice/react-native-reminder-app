@@ -57,13 +57,15 @@ const RemindersEdit = ({ itemId }) => {
         axiosConfig
       );
       setFormData({
-        ...response.data.reminder[0],
+        ...response.data.reminder[0],  category_id: response.data.reminder[0].category_id._id,
       });
+      /*
       const updatedFormData = {
         ...formData,
         category_id: response.data.reminder[0].category_id._id,
       };
       setFormData(updatedFormData);
+      */
       const convertedData = response.data.categories.map((category) => ({
         label: category.name,
         value: category._id,

@@ -117,8 +117,19 @@ const RemindersAdd = ({ setReminder, reload, setReload }) => {
           label: category.name,
           value: category._id,
         }));
-
         setCategoriesData(convertedData);
+
+        if (convertedData.length > 0) {
+          const updatedFormData = {
+            ...formData,
+            category_id: convertedData[0].value,
+          };
+          setFormData(updatedFormData);
+          setCategory({
+            value: convertedData[0].value,
+            label: convertedData[0].name,
+          });
+        }
       })
       .catch((error) => {
         console.error("Error during api call:", error);
@@ -219,7 +230,7 @@ const RemindersAdd = ({ setReminder, reload, setReload }) => {
             onChangeText={(text) => handleInput("description", text)}
           />
         </View>
-        <Text>{category.value}</Text>
+       {/* <Text>{category.value}</Text>*/}
         {categoriesData && categoriesData.length > 0 && (
           <Picker
             selectedValue={category.value}
