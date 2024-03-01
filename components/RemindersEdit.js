@@ -18,10 +18,12 @@ import { DatePickerModal } from "react-native-paper-dates";
 import RNPickerSelect from "react-native-picker-select";
 import moment from "moment";
 import "moment/locale/it";
+import { Picker } from "@react-native-picker/picker";
 
 const RemindersEdit = ({ itemId }) => {
   const navigation = useNavigation();
   const [categoriesData, setCategoriesData] = useState(null);
+  const [category, setCategory] = useState({ label: null, value: null });
   const [display, setDisplay] = useState("none");
   const { token, setAuthToken, reload, setReload } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
@@ -54,13 +56,23 @@ const RemindersEdit = ({ itemId }) => {
         `${API_URLS.reminderApi}/api/reminder/${itemId}`,
         axiosConfig
       );
-
       setFormData({
         ...response.data.reminder[0],
       });
-      setCategoriesData(response.data.categories);
-      console.log("response.data.categories");
-      console.log(response.data.categories);
+      const updatedFormData = {
+        ...formData,
+        category_id: response.data.reminder[0].category_id._id,
+      };
+      setFormData(updatedFormData);
+      const convertedData = response.data.categories.map((category) => ({
+        label: category.name,
+        value: category._id,
+      }));
+      setCategoriesData(convertedData);
+      setCategory({
+        value: response.data.reminder[0].category_id._id,
+        label: response.data.reminder[0].category_id.name,
+      });
     } catch (error) {
       console.error("Errore durante il recupero degli elementi:", error);
     }
@@ -131,9 +143,14 @@ const RemindersEdit = ({ itemId }) => {
     },
   });
 
-  const handleValueChange = (value) => {
+  const handleValueChange = (value, index) => {
+    const selectedCategoryData = categoriesData[index];
     const updatedFormData = { ...formData, category_id: value };
     setFormData(updatedFormData);
+    setCategory({
+      value: selectedCategoryData.value,
+      label: selectedCategoryData.label,
+    });
   };
 
   const changeScreen = (screen) => {
@@ -174,6 +191,7 @@ const RemindersEdit = ({ itemId }) => {
             />
             <Text style={styles.dateButtonText}>Select deadline date</Text>
           </TouchableOpacity>
+
           {modalVisible && (
             <DatePickerModal
               visible={modalVisible}
@@ -205,15 +223,24 @@ const RemindersEdit = ({ itemId }) => {
             onChangeText={(text) => handleInput("description", text)}
           />
         </View>
-        <RNPickerSelect
-          placeholder={{}}
-          placeholderTextColor="red"
-          style={pickerSelectStyles}
-          onValueChange={handleValueChange}
-          items={(categoriesData && categoriesData) || []}
-          useNativeAndroidPickerStyle={false}
-          fixAndroidTouchableBug={false}
-        />
+        {categoriesData && categoriesData.length > 0 && (
+          <Picker
+            selectedValue={category.value}
+            onValueChange={(itemValue, itemIndex) =>
+              handleValueChange(itemValue, itemIndex)
+            }
+            style={pickerSelectStyles}
+          >
+            {categoriesData &&
+              categoriesData.map((category, index) => (
+                <Picker.Item
+                  key={index}
+                  label={category.label}
+                  value={category.value}
+                />
+              ))}
+          </Picker>
+        )}
 
         <TouchableOpacity style={styles.editButton} onPress={editReminder}>
           <Text style={styles.buttonText}>Save</Text>

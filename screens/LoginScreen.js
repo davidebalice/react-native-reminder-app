@@ -6,7 +6,6 @@ import {
   Alert,
   StyleSheet,
   Text,
-  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";

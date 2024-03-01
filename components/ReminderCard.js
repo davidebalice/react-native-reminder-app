@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from "react-native";
-import Spacer from "./Spacer";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { AuthContext } from "../context/authContext";
 import axios from "axios";
@@ -10,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const ReminderCard = ({ item, reload, setReload }) => {
   const navigation = useNavigation();
-  const { token, setAuthToken } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const showModal = () => setModalVisible(true);
   const hideModal = () => setModalVisible(false);
@@ -40,7 +39,7 @@ const ReminderCard = ({ item, reload, setReload }) => {
   };
 
   return (
-    <View style={styles.card}>
+    <View style={styles.card} key={item._doc._id}>
       <View style={styles.cardBody}>
         <View>
           <Text style={styles.title}>
@@ -71,7 +70,10 @@ const ReminderCard = ({ item, reload, setReload }) => {
         </View>
       </View>
 
-      <Modal visible={isModalVisible} animationType="slide">
+      <Modal
+        visible={isModalVisible}
+        animationType="slide"
+      >
         <View style={styles.modalContainer}>
           <Text style={styles.modalText}>Confirm delete?</Text>
           <View style={styles.modalButtons}>

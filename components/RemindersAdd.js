@@ -14,10 +14,11 @@ import axios from "axios";
 import API_URLS from "../config";
 import { format } from "date-fns";
 import { DatePickerModal } from "react-native-paper-dates";
-import RNPickerSelect from "react-native-picker-select";
+import { Picker } from "@react-native-picker/picker";
 
-const RemindersAdd = ({ reminder, setReminder, reload, setReload }) => {
+const RemindersAdd = ({ setReminder, reload, setReload }) => {
   const [categoriesData, setCategoriesData] = useState(null);
+  const [category, setCategory] = useState({ label: null, value: null });
   const panelHeight = useRef(new Animated.Value(0)).current;
   const [display, setDisplay] = useState("none");
   const { token } = useContext(AuthContext);
@@ -137,9 +138,15 @@ const RemindersAdd = ({ reminder, setReminder, reload, setReload }) => {
     },
   });
 
-  const handleValueChange = (value) => {
+  const handleValueChange = (value, index) => {
+    console.log(value);
+    const selectedCategoryData = categoriesData[index];
     const updatedFormData = { ...formData, category_id: value };
     setFormData(updatedFormData);
+    setCategory({
+      value: selectedCategoryData.value,
+      label: selectedCategoryData.label,
+    });
   };
 
   return (
@@ -161,12 +168,7 @@ const RemindersAdd = ({ reminder, setReminder, reload, setReload }) => {
           {open ? (
             <Icon name="close" size={20} color="#888" style={styles.plusIcon} />
           ) : (
-            <Icon
-              name="plus"
-              size={20}
-              color="#888"
-              style={styles.plusIcon}
-            />
+            <Icon name="plus" size={20} color="#888" style={styles.plusIcon} />
           )}
         </TouchableOpacity>
       </View>
@@ -217,15 +219,25 @@ const RemindersAdd = ({ reminder, setReminder, reload, setReload }) => {
             onChangeText={(text) => handleInput("description", text)}
           />
         </View>
-        <RNPickerSelect
-          placeholder={{}}
-          placeholderTextColor="red"
-          style={pickerSelectStyles}
-          onValueChange={handleValueChange}
-          items={categoriesData || []}
-          useNativeAndroidPickerStyle={false}
-          fixAndroidTouchableBug={false}
-        />
+        <Text>{category.value}</Text>
+        {categoriesData && categoriesData.length > 0 && (
+          <Picker
+            selectedValue={category.value}
+            onValueChange={(itemValue, itemIndex) =>
+              handleValueChange(itemValue, itemIndex)
+            }
+            style={pickerSelectStyles}
+          >
+            {categoriesData &&
+              categoriesData.map((category, index) => (
+                <Picker.Item
+                  key={index}
+                  label={category.label}
+                  value={category.value}
+                />
+              ))}
+          </Picker>
+        )}
 
         <TouchableOpacity style={styles.addButton} onPress={addReminder}>
           <Text style={styles.buttonText}>Add reminder</Text>

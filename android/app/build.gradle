@@ -81,9 +81,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.starterapp"
+    namespace "com.reminderapp"
     defaultConfig {
-        applicationId "com.starterapp"
+        applicationId "com.reminderapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

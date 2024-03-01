@@ -2,6 +2,7 @@ import React, { useRef, useState, useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import { Avatar, Button, Card, Text } from "react-native-paper";
 import Reminders from "../components/Reminders";
+import Form from "../components/Form";
 import ProtectedContents from "../middlewares/ProtectedContents";
 import { AuthContext } from "../context/authContext";
 

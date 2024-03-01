@@ -2,11 +2,9 @@ import React, { useState, useContext } from "react";
 import {
   View,
   TextInput,
-  Image,
   Alert,
   StyleSheet,
   Text,
-  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";

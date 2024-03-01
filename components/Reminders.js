@@ -1,20 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Image,
-  Modal,
-  Button,
-  ScrollView,
-  Alert,
-  Animated,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import Spacer from "./Spacer";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { AuthContext } from "../context/authContext";
 import axios from "axios";
 import API_URLS from "../config";
@@ -27,7 +13,7 @@ const Reminders = () => {
     description: "",
   });
   const [reminders, setReminders] = useState([]);
-  const { token, setAuthToken, reload, setReload } = useContext(AuthContext);
+  const { token, reload, setReload } = useContext(AuthContext);
 
   const renderItem = ({ item }) => {
     return <ReminderCard item={item} reload={reload} setReload={setReload} />;
@@ -56,25 +42,34 @@ const Reminders = () => {
     fetchData();
   }, [reload]);
 
+  //prove
+  //flatlist si, add no
+  //flatlist si, add si ma senza datepicker
+  //flatlist si, add si ma senza datepicker e senza animazioni
+
   return (
     <>
-      <ReminderAdd
-        reminder={reminder}
-        setReminder={setReminder}
-        reload={reload}
-        setReload={setReload}
-      />
-      <View style={styles.container}>
-        <ScrollView style={styles.scrollView}>
-          <FlatList
-            data={reminders}
-            renderItem={renderItem}
-            keyExtractor={(item) => item._id}
+      {reminders && reload >= 0 ? (
+        <>
+          <ReminderAdd
+            reminder={reminder}
+            setReminder={setReminder}
+            reload={reload}
+            setReload={setReload}
           />
-          <Spacer height={100} />
-        </ScrollView>
-      </View>
-      <Spacer height={10} />
+          <View style={styles.container}>
+            <FlatList
+              data={reminders ? reminders : null}
+              renderItem={renderItem}
+              keyExtractor={(item) => item?._id || Math.random().toString()}
+            />
+            <Spacer height={100} />
+          </View>
+          <Spacer height={10} />
+        </>
+      ) : (
+        <Text>Loading</Text>
+      )}
     </>
   );
 };

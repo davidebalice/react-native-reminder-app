@@ -1,4 +1,4 @@
-package com.starterapp;
+package com.reminderapp;
 
 import android.os.Build;
 import android.os.Bundle;
