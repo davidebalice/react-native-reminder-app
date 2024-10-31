@@ -42,11 +42,6 @@ const Reminders = () => {
     fetchData();
   }, [reload]);
 
-  //prove
-  //flatlist si, add no
-  //flatlist si, add si ma senza datepicker
-  //flatlist si, add si ma senza datepicker e senza animazioni
-
   return (
     <>
       {reminders && reload >= 0 ? (

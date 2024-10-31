@@ -1,5 +1,5 @@
 const API_URLS = {
-  reminderApi: "https://personal-reminder-api.davidebalice.dev",
+  reminderApi: "https://reminder-api.davidebalice.dev",
 };
 
 /*
